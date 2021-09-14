@@ -1,27 +1,25 @@
 version 1.0
 
 task fastqc {
-
   input {
-    File        read1
-    File        read2
-    String      read1_name = basename(basename(basename(read1, ".gz"), ".fastq"), ".fq")
-    String      read2_name = basename(basename(basename(read2, ".gz"), ".fastq"), ".fq")
-    Int?        cpus = 2
+    File read1
+    File read2
+    String read1_name = basename(basename(basename(read1, ".gz"), ".fastq"), ".fq")
+    String read2_name = basename(basename(basename(read2, ".gz"), ".fastq"), ".fq")
+    Int? cpus = 2
   }
-
-  command {
+  command <<<
     # capture date and version
     date | tee DATE
     fastqc --version | grep FastQC | tee VERSION
 
-    fastqc --outdir $PWD --threads ${cpus} ${read1} ${read2}
+    fastqc --outdir $PWD --threads ~{cpus} ~{read1} ~{read2}
 
-    unzip -p ${read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ1_SEQS
-    unzip -p ${read2_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ2_SEQS
+    unzip -p ~{read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ1_SEQS
+    unzip -p ~{read2_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ2_SEQS
 
-    READ1_SEQS=$(unzip -p ${read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
-    READ2_SEQS=$(unzip -p ${read2_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
+    READ1_SEQS=$(unzip -p ~{read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
+    READ2_SEQS=$(unzip -p ~{read2_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
 
     if [ $READ1_SEQS == $READ2_SEQS ]; then
       read_pairs=$READ1_SEQS
@@ -29,59 +27,54 @@ task fastqc {
       read_pairs="Uneven pairs: R1=$READ1_SEQS, R2=$READ2_SEQS"
     fi
     echo $read_pairs | tee READ_PAIRS
-  }
-
+  >>>
   output {
-    File       fastqc1_html = "${read1_name}_fastqc.html"
-    File       fastqc1_zip = "${read1_name}_fastqc.zip"
-    File       fastqc2_html = "${read2_name}_fastqc.html"
-    File       fastqc2_zip = "${read2_name}_fastqc.zip"
-    Int        read1_seq = read_string("READ1_SEQS")
-    Int        read2_seq = read_string("READ2_SEQS")
-    String        read_pairs = read_string("READ_PAIRS")
-    String     version = read_string("VERSION")
-    String     pipeline_date = read_string("DATE")
+    File fastqc1_html = "${read1_name}_fastqc.html"
+    File fastqc1_zip = "${read1_name}_fastqc.zip"
+    File fastqc2_html = "${read2_name}_fastqc.html"
+    File fastqc2_zip = "${read2_name}_fastqc.zip"
+    Int read1_seq = read_string("READ1_SEQS")
+    Int read2_seq = read_string("READ2_SEQS")
+    String read_pairs = read_string("READ_PAIRS")
+    String version = read_string("VERSION")
+    String pipeline_date = read_string("DATE")
   }
-
   runtime {
-    docker:       "staphb/fastqc:0.11.8"
-    memory:       "4 GB"
-    cpu:          2
-    disks:        "local-disk 100 SSD"
-    preemptible:  0
-    maxRetries:   3
+    docker:"staphb/fastqc:0.11.8"
+    memory: "4 GB"
+    cpu: 2
+    disks: "local-disk 100 SSD"
+    preemptible: 0
+    maxRetries: 3
   }
 }
+
 task fastqc_se {
-
   input {
-    File        read1
-    String      read1_name = basename(basename(basename(read1, ".gz"), ".fastq"), ".fq")
-    Int?        cpus = 2
+    File read1
+    String read1_name = basename(basename(basename(read1, ".gz"), ".fastq"), ".fq")
+    Int? cpus = 2
   }
-
-  command {
+  command <<<
     # capture date and version
     date | tee DATE
     fastqc --version | grep FastQC | tee VERSION
 
-    fastqc --outdir $PWD --threads ${cpus} ${read1}
+    fastqc --outdir $PWD --threads ~{cpus} ~{read1}
 
-    unzip -p ${read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ1_SEQS
+    unzip -p ~{read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 | tee READ1_SEQS
 
-    READ_SEQS=$(unzip -p ${read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
+    READ_SEQS=$(unzip -p ~{read1_name}_fastqc.zip */fastqc_data.txt | grep "Total Sequences" | cut -f 2 )
 
     echo $read_pairs | tee READ_PAIRS
-  }
-
+  >>>
   output {
-    File       fastqc_html = "${read1_name}_fastqc.html"
-    File       fastqc_zip = "${read1_name}_fastqc.zip"
-    Int        number_reads = read_string("READ1_SEQS")
-    String     version = read_string("VERSION")
-    String     pipeline_date = read_string("DATE")
+    File fastqc_html = "${read1_name}_fastqc.html"
+    File fastqc_zip = "${read1_name}_fastqc.zip"
+    Int number_reads = read_string("READ1_SEQS")
+    String version = read_string("VERSION")
+    String pipeline_date = read_string("DATE")
   }
-
   runtime {
     docker:       "staphb/fastqc:0.11.8"
     memory:       "4 GB"
@@ -91,13 +84,11 @@ task fastqc_se {
     maxRetries:   3
   }
 }
+
 task consensus_qc {
-
   input {
-    File        assembly_fasta
-
+    File assembly_fasta
   }
-
   command <<<
     # capture date and version
     date | tee DATE
@@ -121,20 +112,18 @@ task consensus_qc {
     if [ -z "$num_total" ] ; then num_total="0" ; fi
     echo $num_total | tee NUM_TOTAL
   >>>
-
   output {
-    Int       number_N = read_string("NUM_N")
-    Int       number_ATCG = read_string("NUM_ACTG")
-    Int       number_Degenerate = read_string("NUM_DEGENERATE")
-    Int       number_Total = read_string("NUM_TOTAL")
-    Float     percent_reference_coverage = read_string("PERCENT_REF_COVERAGE")
+    Int number_N = read_string("NUM_N")
+    Int number_ATCG = read_string("NUM_ACTG")
+    Int number_Degenerate = read_string("NUM_DEGENERATE")
+    Int number_Total = read_string("NUM_TOTAL")
+    Float percent_reference_coverage = read_string("PERCENT_REF_COVERAGE")
   }
-
   runtime {
-    docker:       "theiagen/utility:1.1"    
-    memory:       "2 GB"
-    cpu:          1
-    disks:        "local-disk 100 SSD"
-    preemptible:  0
+    docker: "theiagen/utility:1.1"    
+    memory: "2 GB"
+    cpu: 1
+    disks: "local-disk 100 SSD"
+    preemptible: 0
   }
 }

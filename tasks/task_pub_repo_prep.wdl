@@ -36,7 +36,7 @@ task ncbi_prep_one_sample {
     String? amplicon_size
     String? biosample_accession = "{populate_with_bioSample_accession}"
     String? gisaid_accession
-    String? gisaid_organism="hCoV-2019"
+    String? gisaid_organism = "hCoV-2019"
     String? patient_age
     String? patient_gender
     String? purpose_of_sampling
@@ -98,9 +98,7 @@ task ncbi_prep_one_sample {
     ##GenBank modifier
     echo -e "Sequence_ID\tcountry\thost\tisolate\tcollection-date\tisolation-source\tBioSample\tBioProject\tnote" > ~{submission_id}_genbank_modifier.tsv
     echo -e "~{submission_id}\t~{country}\t~{host_sci_name}\t${isolate}\t~{collection_date}\t~{isolation_source}\t~{biosample_accession}\t~{bioproject_accession}"  >> ~{submission_id}_genbank_modifier.tsv
-    
   >>>
-
   output {
     File biosample_attributes = "~{submission_id}_biosample_attributes.tsv"
     File sra_metadata = "~{submission_id}_sra_metadata.tsv"
@@ -110,16 +108,16 @@ task ncbi_prep_one_sample {
     File sra_read2 = "~{submission_id}_R2.fastq.gz"
     Array[File] sra_reads = ["~{submission_id}_R1.fastq.gz","~{submission_id}_R2.fastq.gz"]
   }
-
   runtime {
-      docker:       "~{docker_image}"
-      memory:       "~{mem_size_gb} GB"
-      cpu:          CPUs
-      disks:        "local-disk ~{disk_size} SSD"
-      preemptible:  preemptible_tries
-      maxRetries:   3
+    docker: "~{docker_image}"
+    memory: "~{mem_size_gb} GB"
+    cpu: CPUs
+    disks: "local-disk ~{disk_size} SSD"
+    preemptible: preemptible_tries
+    maxRetries: 3
   }
 }
+
 task ncbi_prep_one_sample_se {
   input {
     #required files
@@ -155,7 +153,7 @@ task ncbi_prep_one_sample_se {
     String? amplicon_size
     String? biosample_accession = "{populate_with_bioSample_accession}"
     String? gisaid_accession
-    String? gisaid_organism="hCoV-2019"
+    String? gisaid_organism = "hCoV-2019"
     String? patient_age
     String? patient_gender
     String? purpose_of_sampling
@@ -216,9 +214,7 @@ task ncbi_prep_one_sample_se {
     ##GenBank modifier
     echo -e "Sequence_ID\tcountry\thost\tisolate\tcollection-date\tisolation-source\tBioSample\tBioProject\tnote" > ~{submission_id}_genbank_modifier.tsv
     echo -e "~{submission_id}\t~{country}\t~{host_sci_name}\t${isolate}\t~{collection_date}\t~{isolation_source}\t~{biosample_accession}\t~{bioproject_accession}"  >> ~{submission_id}_genbank_modifier.tsv
-    
   >>>
-
   output {
     File biosample_attributes = "~{submission_id}_biosample_attributes.tsv"
     File sra_metadata = "~{submission_id}_sra_metadata.tsv"
@@ -226,16 +222,16 @@ task ncbi_prep_one_sample_se {
     File genbank_modifier = "~{submission_id}_genbank_modifier.tsv"
     File sra_reads = "~{submission_id}_R1.fastq.gz"
   }
-
   runtime {
-      docker:       "~{docker_image}"
-      memory:       "~{mem_size_gb} GB"
-      cpu:          CPUs
-      disks:        "local-disk ~{disk_size} SSD"
-      preemptible:  preemptible_tries
-      maxRetries:   3
+    docker: "~{docker_image}"
+    memory: "~{mem_size_gb} GB"
+    cpu: CPUs
+    disks: "local-disk ~{disk_size} SSD"
+    preemptible: preemptible_tries
+    maxRetries: 3
   }
 }
+
 task gisaid_prep_one_sample {
   input {
     #required files
@@ -258,7 +254,7 @@ task gisaid_prep_one_sample {
     String submission_id
     String submitting_lab
     String submitting_lab_address
-    String type="betacoronavirus"
+    String type = "betacoronavirus"
     
     #optional metadata
     String? county
@@ -301,27 +297,22 @@ task gisaid_prep_one_sample {
     echo "Submitter,FASTA filename,Virus name,Type,Passage details/history,Collection date,Location,Additional location information,Host,Additional host information,Sampling Strategy,Gender,Patient age,Patient status,Specimen source,Outbreak,Last vaccinated,Treatment,Sequencing technology,Assembly method,Coverage,Originating lab,Address,Sample ID given by the sample provider,Submitting lab,Address,Sample ID given by the submitting laboratory,Authors,Comment,Comment Icon" >> ~{submission_id}_gisaid_metadata.csv
 
     echo "\"~{gisaid_submitter}\",\"~{submission_id}.gisaid.fa\",\"~{organism}/~{country}/~{submission_id}/$year\",\"~{type}\",\"~{passage_details}\",\"~{collection_date}\",\"~{continent}/~{country}/~{state}/~{county}\",,\"~{host}\",,\"~{purpose_of_sequencing}\",\"~{patient_gender}\",\"~{patient_age}\",\"~{patient_status}\",\"~{specimen_source}\",\"~{outbreak}\",\"~{last_vaccinated}\",\"~{treatment}\",\"~{seq_platform}\",\"~{assembly_method}\",\"~{assembly_mean_coverage}\",\"~{collecting_lab}\",\"~{collecting_lab_address}\",,\"~{submitting_lab}\",\"~{submitting_lab_address}\",,\"~{authors}\",," >> ~{submission_id}_gisaid_metadata.csv
-
   >>>
-
   output {
     File gisaid_assembly = "~{submission_id}_gisaid.fasta"
     File gisaid_metadata = "~{submission_id}_gisaid_metadata.csv"
   }
-
   runtime {
-      docker:       "~{docker_image}"
-      memory:       "~{mem_size_gb} GB"
-      cpu:          CPUs
-      disks:        "local-disk ~{disk_size} SSD"
-      preemptible:  preemptible_tries
-      maxRetries:   3
+    docker: "~{docker_image}"
+    memory: "~{mem_size_gb} GB"
+    cpu: CPUs
+    disks: "local-disk ~{disk_size} SSD"
+    preemptible: preemptible_tries
+    maxRetries: 3
   }
 }
 
-
 task compile_assembly_n_meta {
-
   input {
     Array[File] single_submission_fasta
     Array[File] single_submission_meta
@@ -338,169 +329,163 @@ task compile_assembly_n_meta {
     Int disk_size = 100
     Int preemptible_tries = 0
   }
-
   command <<<
-  assembly_array=(~{sep=' ' single_submission_fasta})
-  assembly_array_len=$(echo "${#assembly_array[@]}")
-  meta_array=(~{sep=' ' single_submission_meta})
-  meta_array_len=$(echo "${#meta_array[@]}")
-  vadr_string="~{sep=',' vadr_num_alerts}"
-  IFS=',' read -r -a vadr_array <<< ${vadr_string}
-  vadr_array_len=$(echo "${#vadr_array[@]}")
-  samplename_array=(~{sep=' ' samplename})
-  samplename_array_len=$(echo "${#samplename_array[@]}")
-  submission_id_array=(~{sep=' ' submission_id})
-  submission_id_array_len=$(echo "${#submission_id_array[@]}")
-  vadr_array_len=$(echo "${#vadr_array[@]}")
-  passed_assemblies=""
-  passed_meta=""
+    assembly_array=(~{sep=' ' single_submission_fasta})
+    assembly_array_len=$(echo "${#assembly_array[@]}")
+    meta_array=(~{sep=' ' single_submission_meta})
+    meta_array_len=$(echo "${#meta_array[@]}")
+    vadr_string="~{sep=',' vadr_num_alerts}"
+    IFS=',' read -r -a vadr_array <<< ${vadr_string}
+    vadr_array_len=$(echo "${#vadr_array[@]}")
+    samplename_array=(~{sep=' ' samplename})
+    samplename_array_len=$(echo "${#samplename_array[@]}")
+    submission_id_array=(~{sep=' ' submission_id})
+    submission_id_array_len=$(echo "${#submission_id_array[@]}")
+    vadr_array_len=$(echo "${#vadr_array[@]}")
+    passed_assemblies=""
+    passed_meta=""
 
-  #Create files to capture batched and excluded samples
-  echo -e "~{repository} Identifier\tSamplename\tNumber of Vadr Alerts\tNote" > ~{repository}_batched_samples_~{date}.~{file_ext}
-  echo -e "~{repository} Identifier\tSamplename\tNumber of Vadr Alerts\tNote" > ~{repository}_excluded_samples_~{date}.~{file_ext}
+    #Create files to capture batched and excluded samples
+    echo -e "~{repository} Identifier\tSamplename\tNumber of Vadr Alerts\tNote" > ~{repository}_batched_samples_~{date}.~{file_ext}
+    echo -e "~{repository} Identifier\tSamplename\tNumber of Vadr Alerts\tNote" > ~{repository}_excluded_samples_~{date}.~{file_ext}
 
-  #Ensure assembly, meta, and vadr arrays are of equal length
-  echo "Samples: $samplename_array_len, Assemblies: $assembly_array_len, Metadata: $meta_array_len, Vadr: $vadr_array_len, Submission_IDs: $submission_id_array_len"
-  if [ "$submission_id_array_len" -ne "$vadr_array_len" ]; then
-    echo "Submission ID array (length: $submission_id_array_len) and vadr array (length: $vadr_array_len) are of unequal length." >&2
-    exit 1
-  else 
-    echo "Submission ID array (length: $submission_id_array_len) and vadr array (length: $vadr_array_len) are of equal length."
-  fi
+    #Ensure assembly, meta, and vadr arrays are of equal length
+    echo "Samples: $samplename_array_len, Assemblies: $assembly_array_len, Metadata: $meta_array_len, Vadr: $vadr_array_len, Submission_IDs: $submission_id_array_len"
+    if [ "$submission_id_array_len" -ne "$vadr_array_len" ]; then
+      echo "Submission ID array (length: $submission_id_array_len) and vadr array (length: $vadr_array_len) are of unequal length." >&2
+      exit 1
+    else 
+      echo "Submission ID array (length: $submission_id_array_len) and vadr array (length: $vadr_array_len) are of equal length."
+    fi
 
-  #remove samples that excede vadr threshold
-  for index in ${!submission_id_array[@]}; do
-    submission_id=${submission_id_array[$index]}
-    samplename=${samplename_array[$index]}
-    vadr=${vadr_array[$index]} 
-    batch_note=""
-    
-    # check if the sample has submittable assembly file; if so remove those that excede vadr thresholds
-    assembly=$(printf '%s\n' "${assembly_array[@]}" | grep "${submission_id}")
-    metadata=$(printf '%s\n' "${meta_array[@]}" | grep "${submission_id}")
+    #remove samples that excede vadr threshold
+    for index in ${!submission_id_array[@]}; do
+      submission_id=${submission_id_array[$index]}
+      samplename=${samplename_array[$index]}
+      vadr=${vadr_array[$index]} 
+      batch_note=""
+      
+      # check if the sample has submittable assembly file; if so remove those that excede vadr thresholds
+      assembly=$(printf '%s\n' "${assembly_array[@]}" | grep "${submission_id}")
+      metadata=$(printf '%s\n' "${meta_array[@]}" | grep "${submission_id}")
 
-    echo -e "Submission_ID: ${submission_id}\n\tAssembly: ${assembly}\n\tMetadata: ${metadata}\n\tVADR: ${vadr}"
-    
-    if [ \( ! -z "${assembly}" \) -a \( ! -z "{$metadata}" \) ]; then
-      repository_identifier=$(grep -e ">" ${assembly} | sed 's/\s.*$//' | sed 's/>//g' )  
-      re='^[0-9]+$'
-      if ! [[ "${vadr}" =~ $re ]] ; then
-        batch_note="No VADR value to evaluate"
-        echo -e "\t$submission_id removed: ${batch_note}"
-        echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_excluded_samples_~{date}.~{file_ext}
-      elif [ "${vadr}" -le "~{vadr_threshold}" ] ; then
-        passed_assemblies=( "${passed_assemblies[@]}" "${assembly}")
-        passed_meta=( "${passed_meta[@]}" "${metadata}")
-        echo -e "\t$submission_id added to batch"
-        echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_batched_samples_~{date}.~{file_ext}
+      echo -e "Submission_ID: ${submission_id}\n\tAssembly: ${assembly}\n\tMetadata: ${metadata}\n\tVADR: ${vadr}"
+      
+      if [ \( ! -z "${assembly}" \) -a \( ! -z "{$metadata}" \) ]; then
+        repository_identifier=$(grep -e ">" ${assembly} | sed 's/\s.*$//' | sed 's/>//g' )  
+        re='^[0-9]+$'
+        if ! [[ "${vadr}" =~ $re ]] ; then
+          batch_note="No VADR value to evaluate"
+          echo -e "\t$submission_id removed: ${batch_note}"
+          echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_excluded_samples_~{date}.~{file_ext}
+        elif [ "${vadr}" -le "~{vadr_threshold}" ] ; then
+          passed_assemblies=( "${passed_assemblies[@]}" "${assembly}")
+          passed_meta=( "${passed_meta[@]}" "${metadata}")
+          echo -e "\t$submission_id added to batch"
+          echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_batched_samples_~{date}.~{file_ext}
+        else 
+          batch_note="Number of vadr alerts (${vadr}) exceeds threshold ~{vadr_threshold}"
+          echo -e "\t$submission_id removed: ${batch_note}"
+          echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_excluded_samples_~{date}.~{file_ext}
+        fi
       else 
-        batch_note="Number of vadr alerts (${vadr}) exceeds threshold ~{vadr_threshold}"
+        batch_note="Assembly or metadata file missing" 
+        repository_identifier="NA"
         echo -e "\t$submission_id removed: ${batch_note}"
         echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_excluded_samples_~{date}.~{file_ext}
       fi
-    else 
-      batch_note="Assembly or metadata file missing" 
-      repository_identifier="NA"
-      echo -e "\t$submission_id removed: ${batch_note}"
-      echo -e "$repository_identifier\t$samplename\t$vadr\t$batch_note" >> ~{repository}_excluded_samples_~{date}.~{file_ext}
-    fi
 
-  done
+    done
 
-  count=0
-  for i in ${passed_meta[*]}; do
-      # grab header from first sample in meta_array
-      while [ "$count" -lt 1 ]; do
-        head -n -1 $i > ~{repository}_upload_meta_~{date}.~{file_ext}
-        count+=1
-      done
-      #populate csv with each samples metadata
-      tail -n1 $i >> ~{repository}_upload_meta_~{date}.~{file_ext}
-  done
+    count=0
+    for i in ${passed_meta[*]}; do
+        # grab header from first sample in meta_array
+        while [ "$count" -lt 1 ]; do
+          head -n -1 $i > ~{repository}_upload_meta_~{date}.~{file_ext}
+          count+=1
+        done
+        #populate csv with each samples metadata
+        tail -n1 $i >> ~{repository}_upload_meta_~{date}.~{file_ext}
+    done
 
-  cat ${passed_assemblies[*]} > ~{repository}_upload_~{date}.fasta
-
+    cat ${passed_assemblies[*]} > ~{repository}_upload_~{date}.fasta
   >>>
-
   output {
-    File?   upload_meta   = "${repository}_upload_meta_~{date}.~{file_ext}"
-    File?   upload_fasta  = "${repository}_upload_~{date}.fasta"
-    File    batched_samples = "${repository}_batched_samples_~{date}.~{file_ext}"
-    File    excluded_samples = "${repository}_excluded_samples_~{date}.~{file_ext}"
-
+    File? upload_meta = "${repository}_upload_meta_~{date}.~{file_ext}"
+    File? upload_fasta = "${repository}_upload_~{date}.fasta"
+    File batched_samples = "${repository}_batched_samples_~{date}.~{file_ext}"
+    File excluded_samples = "${repository}_excluded_samples_~{date}.~{file_ext}"
   }
-
   runtime {
-      docker:       docker_image
-      memory:       "~{mem_size_gb} GB"
-      cpu:          CPUs
-      disks:        "local-disk ~{disk_size} SSD"
-      preemptible:  preemptible_tries
-      maxRetries:   3
+    docker:docker_image
+    memory: "~{mem_size_gb} GB"
+    cpu: CPUs
+    disks: "local-disk ~{disk_size} SSD"
+    preemptible: preemptible_tries
+    maxRetries: 3
   }
 }
+
 task compile_biosamp_n_sra {
-input {
-  Array[File] single_submission_biosample_attirbutes
-  Array[File] single_submission_sra_metadata
-  Array[File] single_submission_sra_reads
-  String date
-  String? gcp_bucket
-
-  String      docker_image = "theiagen/utility:1.1"
-  Int         mem_size_gb = 16
-  Int         CPUs = 4
-  Int         disk_size = 100
-  Int         preemptible_tries = 0
-}
-
+  input {
+    Array[File] single_submission_biosample_attirbutes
+    Array[File] single_submission_sra_metadata
+    Array[File] single_submission_sra_reads
+    String date
+    String? gcp_bucket
+    String docker_image = "theiagen/utility:1.1"
+    Int mem_size_gb = 16
+    Int CPUs = 4
+    Int disk_size = 100
+    Int preemptible_tries = 0
+  }
   command <<<
-  biosample_attributes_array=(~{sep=' ' single_submission_biosample_attirbutes})
-  biosample_attributes_array_len=$(echo "${#biosample_attributes_array[@]}")
-  sra_metadata_array=(~{sep=' ' single_submission_sra_metadata})
-  sra_metadata_array_len=$(echo "${#sra_metadata_array[@]}")
-  sra_reads_array=(~{sep=' ' single_submission_sra_reads})
-  sra_reads_arra_len=$(echo "${#sra_reads_arra[@]}")
-  
-  # Compile BioSample attributes
-  biosamp_count=0
-  for i in ${biosample_attributes_array[*]}; do
-      # grab header from first sample in meta_array
-      while [ "${biosamp_count}" -lt 1 ]; do
-        head -n -1 $i > biosample_attributes_~{date}.tsv
-        biosamp_count+=1
-      done
-      #populate csv with each samples metadata
-      tail -n1 $i >> biosample_attributes_~{date}.tsv
-  done
-  
-  # Compile SRA metadata
-  sra_count=0
-  for i in ${sra_metadata_array[*]}; do
-      # grab header from first sample in meta_array
-      while [ "${sra_count}" -lt 1 ]; do
-        head -n -1 $i > sra_metadata_~{date}.tsv
-        sra_count+=1
-      done
-      #populate csv with each samples metadata
-      tail -n1 $i >> sra_metadata_~{date}.tsv
-  done
-  
-  # move sra read data to gcp bucket if one is specified; zip into single file if not
-  if [[ ! -z "~{gcp_bucket}" ]]
-  then 
-    echo "Moving read data to provided GCP Bucket ~{gcp_bucket}"
-    for i in ${sra_reads_array[*]}; do
-      gsutil -m cp -n $i ~{gcp_bucket}
-    done  
-  else 
-    echo "Preparing SRA read data into single zipped-file"
-    mkdir sra_reads_~{date} 
-    for i in ${sra_reads_array[*]}; do
-      mv $i sra_reads_~{date}
-    done  
-    zip -r sra_reads_~{date}.zip sra_reads_~{date}
-  fi
+    biosample_attributes_array=(~{sep=' ' single_submission_biosample_attirbutes})
+    biosample_attributes_array_len=$(echo "${#biosample_attributes_array[@]}")
+    sra_metadata_array=(~{sep=' ' single_submission_sra_metadata})
+    sra_metadata_array_len=$(echo "${#sra_metadata_array[@]}")
+    sra_reads_array=(~{sep=' ' single_submission_sra_reads})
+    sra_reads_arra_len=$(echo "${#sra_reads_arra[@]}")
+    
+    # Compile BioSample attributes
+    biosamp_count=0
+    for i in ${biosample_attributes_array[*]}; do
+        # grab header from first sample in meta_array
+        while [ "${biosamp_count}" -lt 1 ]; do
+          head -n -1 $i > biosample_attributes_~{date}.tsv
+          biosamp_count+=1
+        done
+        #populate csv with each samples metadata
+        tail -n1 $i >> biosample_attributes_~{date}.tsv
+    done
+    
+    # Compile SRA metadata
+    sra_count=0
+    for i in ${sra_metadata_array[*]}; do
+        # grab header from first sample in meta_array
+        while [ "${sra_count}" -lt 1 ]; do
+          head -n -1 $i > sra_metadata_~{date}.tsv
+          sra_count+=1
+        done
+        #populate csv with each samples metadata
+        tail -n1 $i >> sra_metadata_~{date}.tsv
+    done
+    
+    # move sra read data to gcp bucket if one is specified; zip into single file if not
+    if [[ ! -z "~{gcp_bucket}" ]]
+    then 
+      echo "Moving read data to provided GCP Bucket ~{gcp_bucket}"
+      for i in ${sra_reads_array[*]}; do
+        gsutil -m cp -n $i ~{gcp_bucket}
+      done  
+    else 
+      echo "Preparing SRA read data into single zipped-file"
+      mkdir sra_reads_~{date} 
+      for i in ${sra_reads_array[*]}; do
+        mv $i sra_reads_~{date}
+      done  
+      zip -r sra_reads_~{date}.zip sra_reads_~{date}
+    fi
   >>>
   output {
     File biosample_attributes = "biosample_attributes_~{date}.tsv"

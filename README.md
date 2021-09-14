@@ -7,7 +7,7 @@ Bioinformatics workflows for genomic characterization, submission preparation, a
 * Titan Genomic Characterization workflows influenced by UPHL's [Cecret](https://github.com/UPHL-BioNGS/Cecret) & StaPH-B's [Monroe](https://staph-b.github.io/staphb_toolkit/workflow_docs/monroe/)
 
 ### Repository Style Guide
-2-space indents (no tabs), braces on same line, single space when defining input/output variables, single-line breaks between non-intended constructs, docker as task input, and task commands enclosed with triple braces (`<<< ... >>>`). 
+2-space indents (no tabs), braces on same line, single space when defining input/output variables & runtime attributes, single-line breaks between non-intended constructs, and task commands enclosed with triple braces (`<<< ... >>>`). 
 
 <em>E.g.</em>:
 ```
