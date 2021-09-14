@@ -6,8 +6,8 @@ Bioinformatics workflows for genomic characterization, submission preparation, a
 * Workflows and task development influenced by The Broad's [Viral Pipes](https://github.com/broadinstitute/viral-pipelines)
 * Titan Genomic Characterization workflows influenced by UPHL's [Cecret](https://github.com/UPHL-BioNGS/Cecret) & StaPH-B's [Monroe](https://staph-b.github.io/staphb_toolkit/workflow_docs/monroe/)
 
-## Repository Style Guide
-2-space indents (no tabs), braces on same line, single space when defining input/output variables and single-line breaks between non-intended constructs, and allow user to modify docker image, e.g.: 
+### Repository Style Guide
+2-space indents (no tabs), braces on same line, single space when defining input/output variables, single-line breaks between non-intended constructs, docker as task input, and task commands inclused with triple braces (`<<<...>>>`). <em>E.g.</em>: 
 ```
 workflow w {
   input {
@@ -34,9 +34,9 @@ task task1 {
     String input
     String docker = "theiagen/utility:1.1"
   }
-  command {
-    echo '${input}' > output.txt
-  }
+  command <<<
+    echo '~{input}' > output.txt
+  >>>
   output {
     File output = "output.txt"
   }
@@ -55,9 +55,9 @@ task task_02 {
     String input
     String docker = "theiagen/utility:1.1"
   }
-  command {
-    echo '${input}' > output.txt
-  }
+  command <<<
+    echo '~{input}' > output.txt
+  >>>
   output {
     File output = "output.txt"
   }
@@ -71,4 +71,4 @@ task task_02 {
   }
 }
 ```
-Insipired by [scottfrazer](https://gist.github.com/scottfrazer)'s' (WDL Best Pratcices Style Guide)[https://gist.github.com/scottfrazer/aa4ab1945a6a4c331211]
+Style guide insipired by [scottfrazer](https://gist.github.com/scottfrazer)'s' (WDL Best Pratcices Style Guide)[https://gist.github.com/scottfrazer/aa4ab1945a6a4c331211)
