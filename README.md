@@ -16,14 +16,14 @@ workflow w {
     String input
   }
   call task_01 {
-    input {
+    input:
       input = input
-    }
+    
   }
   call task_02 {
-    input {
+    input: 
       input = input
-    }
+    
   }
   output {
     File task_01_out = task_01.output
