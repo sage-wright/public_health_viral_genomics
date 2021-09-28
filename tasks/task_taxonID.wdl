@@ -75,7 +75,7 @@ task pangolin3 {
       echo "unknown inference_engine designated: ~{inference_engine}; must be usher or pangolearn" >&2
       exit 1
     fi
-    
+
     # date and version capture
     date | tee DATE
 
@@ -195,6 +195,43 @@ task pangolin_update_log {
     maxRetries:   3
   }
 }
+
+task hivmmer_one_sample {
+    meta {
+        description: "HIV classification of one sample."
+    }
+    input {
+        File   reads1
+        File   reads2
+        String samplename
+        String docker = "kantorlab/hivmmer:0.2.1"
+
+    }
+    command {
+        # date and version capture
+        date | tee DATE
+        # Print and save version
+        hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
+
+        set -e
+        hivmmer "~{reads1}" "~{reads2}" -o "/data/~{samplename}" -t 4
+    }
+    runtime {
+        docker: "~{docker}"
+        memory: "4 GB"
+        cpu:    4
+        disks: "local-disk 50 HDD"
+        dx_instance_type: "mem1_ssd1_v2_x2"
+        maxRetries:   3
+    }
+    output {
+        String nextclade_version  = read_string("NEXTCLADE_VERSION")
+        File   nextclade_json     = "~{basename}.nextclade.json"
+        File   auspice_json       = "~{basename}.nextclade.auspice.json"
+        File   nextclade_tsv      = "~{basename}.nextclade.tsv"
+    }
+}
+
 
 task nextclade_one_sample {
     meta {
