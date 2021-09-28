@@ -213,7 +213,7 @@ task hivmmer_one_sample {
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
         # Run hivmmer
         set -e
-        hivmmer "~{reads1}" "~{reads2}" -o "/data/~{samplename}" -t 4
+        hivmmer "~{reads1}" "~{reads2}" -o "~{samplename}" -t 4
     }
     runtime {
         docker: "~{docker}"
@@ -224,10 +224,12 @@ task hivmmer_one_sample {
         maxRetries:   3
     }
     output {
-        String nextclade_version  = read_string("NEXTCLADE_VERSION")
-        File   nextclade_json     = "~{basename}.nextclade.json"
-        File   auspice_json       = "~{basename}.nextclade.auspice.json"
-        File   nextclade_tsv      = "~{basename}.nextclade.tsv"
+        String hivmmer_version = read_string("HIVMMER_VERSION")
+        File   aa_xlsx = "aa.xlsx"
+        File   codons_tsv = "codons.tsv"
+        File   consensus_fasta = "consensus.fa"
+        File   drms_csv = "drms.csv"
+        File   coverage_pdf = "/reports/coverage.pdf"
     }
 }
 
