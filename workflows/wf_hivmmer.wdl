@@ -22,7 +22,7 @@ workflow hivmmer_pe {
   }
   output {
     String  hivmmer_pe_version = hivmmer_one_sample.hivmmer_version
-    String  hivmmer_pe_analysis_date = hivmmer_one_sample
+    String  hivmmer_pe_analysis_date = hivmmer_one_sample.hivmmer_date
     File   hivmmer_aa_xlsx = hivmmer_one_sample.aa_xlsx
     File   hivmmer_codons_tsv = hivmmer_one_sample.codons_tsv
     File   hivmmer_consensus_fasta = hivmmer_one_sample.consensus_fasta
