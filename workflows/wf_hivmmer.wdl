@@ -1,4 +1,5 @@
-version=1.0
+version 1.0
+
 import "../tasks/task_taxonID.wdl" as taxon_ID
 
 workflow hivmmer_pe {
