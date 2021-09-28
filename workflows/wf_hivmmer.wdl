@@ -21,8 +21,8 @@ workflow hivmmer_pe {
       samplename = samplename
   }
   output {
-    String  hivmmer_pe_version = version_capture.phvg_version
-    String  hivmmer_pe_analysis_date = version_capture.date
+    String  hivmmer_pe_version = hivmmer_one_sample.hivmmer_version
+    String  hivmmer_pe_analysis_date = hivmmer_one_sample
     File   hivmmer_aa_xlsx = hivmmer_one_sample.aa_xlsx
     File   hivmmer_codons_tsv = hivmmer_one_sample.codons_tsv
     File   hivmmer_consensus_fasta = hivmmer_one_sample.consensus_fasta
