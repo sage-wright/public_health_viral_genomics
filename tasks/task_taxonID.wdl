@@ -205,14 +205,13 @@ task hivmmer_one_sample {
         File   reads2
         String samplename
         String docker = "kantorlab/hivmmer:0.2.1"
-
     }
     command {
         # date and version capture
         date | tee DATE
         # Print and save version
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
-
+        # Run hivmmer
         set -e
         hivmmer "~{reads1}" "~{reads2}" -o "/data/~{samplename}" -t 4
     }
@@ -231,7 +230,6 @@ task hivmmer_one_sample {
         File   nextclade_tsv      = "~{basename}.nextclade.tsv"
     }
 }
-
 
 task nextclade_one_sample {
     meta {
