@@ -1,4 +1,4 @@
-
+version=1.0
 import "../tasks/task_taxonID.wdl" as taxon_ID
 import "../tasks/task_versioning.wdl" as versioning
 import "../tasks/task_qc_utils.wdl" as qc_utils

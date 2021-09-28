@@ -201,8 +201,8 @@ task hivmmer_one_sample {
         description: "HIV classification of one sample."
     }
     input {
-        File   reads1
-        File   reads2
+        File   read1
+        File   read2
         String samplename
         String docker = "kantorlab/hivmmer:0.2.1"
     }
