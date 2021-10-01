@@ -230,7 +230,6 @@ task hivmmer_one_sample {
         File   codons_tsv = "codons.tsv"
         File   consensus_fasta = "consensus.fa"
         File   drms_csv = "drms.csv"
-        ## File   coverage_pdf = "./report/coverage.pdf"
     }
 }
 
