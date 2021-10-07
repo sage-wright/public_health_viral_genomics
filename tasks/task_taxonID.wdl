@@ -232,7 +232,6 @@ task hivmmer_one_sample {
         File   drms_csv = "~{samplename}/drms.csv"
         File   cov_prrt_pdf = "~{samplename}/report/coverage-prrt.pdf"
         File   coverage_pdf = "~{samplename}/report/coverage.pdf"
-        File   report_latex = "~{samplename}/report/report.tex"
     }
 }
 
