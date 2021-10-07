@@ -215,7 +215,7 @@ task hivmmer_one_sample {
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
         # Run hivmmer
         set -e
-        hivmmer "~{read1}" "~{read2}" -o "~{samplename}" -t 4 --min-length "~{min_read_length}" --min-quality "~{min_quality_score}"
+        hivmmer "~{read1}" "~{read2}" -t 4 --min-length "~{min_read_length}" --min-quality "~{min_quality_score}"
     }
     runtime {
         docker: "~{docker}"
@@ -228,12 +228,12 @@ task hivmmer_one_sample {
     output {
         String hivmmer_version = read_string("HIVMMER_VERSION")
         String hivmmer_date = read_string("DATE")
-        File   aa_xlsx = "~{samplename}/aa.xlsx"
-        File   codons_tsv = "~{samplename}/codons.tsv"
-        File   consensus_fasta = "~{samplename}/consensus.fa"
-        File   drms_csv = "~{samplename}/drms.csv"
-        File   cov_prrt_pdf = "~{samplename}/report/coverage-prrt.pdf"
-        File   coverage_pdf = "~{samplename}/report/coverage.pdf"
+        File   aa_xlsx = "hivmmer_one_sample/aa.xlsx"
+        File   codons_tsv = "hivmmer_one_sample/codons.tsv"
+        File   consensus_fasta = "hivmmer_one_sample/consensus.fa"
+        File   drms_csv = "hivmmer_one_sample/drms.csv"
+        File   cov_prrt_pdf = "hivmmer_one_sample/report/coverage-prrt.pdf"
+        File   coverage_pdf = "hivmmer_one_sample/report/coverage.pdf"
     }
 }
 
