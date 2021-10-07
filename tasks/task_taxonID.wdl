@@ -205,6 +205,8 @@ task hivmmer_one_sample {
         File   read2
         String samplename
         String docker = "kantorlab/hivmmer:0.2.1"
+        Int min_read_length = 75
+        Int min_quality_score = 25
     }
     command {
         # date and version capture
@@ -213,7 +215,7 @@ task hivmmer_one_sample {
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
         # Run hivmmer
         set -e
-        hivmmer "~{read1}" "~{read2}" -o "~{samplename}" -t 4
+        hivmmer "~{read1}" "~{read2}" -o "~{samplename}" -t 4 --min-length min_read_length --min-quality min_quality_score
     }
     runtime {
         docker: "~{docker}"
