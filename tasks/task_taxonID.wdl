@@ -226,10 +226,13 @@ task hivmmer_one_sample {
     output {
         String hivmmer_version = read_string("HIVMMER_VERSION")
         String hivmmer_date = read_string("DATE")
-        File   aa_xlsx = "aa.xlsx"
-        File   codons_tsv = "codons.tsv"
-        File   consensus_fasta = "consensus.fa"
-        File   drms_csv = "drms.csv"
+        File   aa_xlsx = "~{samplename}/aa.xlsx"
+        File   codons_tsv = "~{samplename}/codons.tsv"
+        File   consensus_fasta = "~{samplename}/consensus.fa"
+        File   drms_csv = "~{samplename}/drms.csv"
+        File   cov_prrt_pdf = "~{samplename}/report/coverage-prrt.pdf"
+        File   coverage_pdf = "~{samplename}/report/coverage.pdf"
+        File   report_latex = "~{samplename}/report/report.tex"
     }
 }
 
