@@ -232,8 +232,6 @@ task hivmmer_one_sample {
         File   codons_tsv = "./codons.tsv"
         File   consensus_fasta = "./consensus.fa"
         File   drms_csv = "./drms.csv"
-        File   cov_prrt_pdf = "./report/coverage-prrt.pdf"
-        File   coverage_pdf = "./report/coverage.pdf"
     }
 }
 
