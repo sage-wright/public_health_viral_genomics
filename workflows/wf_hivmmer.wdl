@@ -26,7 +26,5 @@ workflow hivmmer_pe {
     File   hivmmer_codons_tsv = hivmmer_one_sample.codons_tsv
     File   hivmmer_consensus_fasta = hivmmer_one_sample.consensus_fasta
     File   hivmmer_drms_csv = hivmmer_one_sample.drms_csv
-    File   hivmmer_prrt_coverage = hivmmer_one_sample.cov_prrt_pdf
-    File   hivmmer_full_coverage = hivmmer_one_sample.coverage_pdf
   }
 }
