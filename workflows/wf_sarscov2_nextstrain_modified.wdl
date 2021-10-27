@@ -82,6 +82,7 @@ workflow sarscov2_nextstrain {
         input:
             genome_fastas = filter_sequences_by_length.filtered_fasta,
             basename = build_name,
+            dataset_name="sars-cov-2",
             mem_size = 500,
             cpus = 64      
     }
