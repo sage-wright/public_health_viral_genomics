@@ -28,8 +28,6 @@ workflow sarscov2_nextstrain {
         File?           lat_longs_tsv
         Float?          clock_rate
         Float?          clock_std_dev
-        Int             mafft_cpu=64
-        Int             mafft_mem_size=500
 
         Int             min_unambig_genome = 27000
     }
@@ -61,7 +59,7 @@ workflow sarscov2_nextstrain {
 
     call nextstrain.nextstrain_ncov_defaults
 
-    #### mafft_and_snp
+    #### nextalign_and_snp
 
     call utils.zcat {
         input:
@@ -80,14 +78,12 @@ workflow sarscov2_nextstrain {
             min_non_N       = min_unambig_genome
     }
     
-    call nextstrain.mafft_one_chr as mafft {
+    call nextstrain.nextclade_many_samples as nextclade {
         input:
-            sequences = filter_sequences_by_length.filtered_fasta,
-            ref_fasta = select_first([ref_fasta, nextstrain_ncov_defaults.reference_fasta]),
-            basename  = "all_samples_aligned.fasta",
-            cpus      = mafft_cpu,
-            mem_size  = mafft_mem_size
-            
+            genome_fastas = filter_sequences_by_length.filtered_fasta,
+            basename = build_name,
+            mem_size = 500,
+            cpus = 64      
     }
 
     #### merge metadata, compute derived cols
@@ -108,7 +104,7 @@ workflow sarscov2_nextstrain {
     if(defined(builds_yaml)) {
       call nextstrain.nextstrain_build_subsample as subsample {
          input:
-             alignment_msa_fasta = mafft.aligned_sequences,
+             alignment_msa_fasta = nextclade.nextalign_msa,
              sample_metadata_tsv = derived_cols.derived_metadata,
              build_name          = build_name,
              builds_yaml         = builds_yaml
@@ -117,19 +113,19 @@ workflow sarscov2_nextstrain {
     
     call utils.fasta_to_ids {
         input:
-            sequences_fasta = select_first([subsample.subsampled_msa, mafft.aligned_sequences])
+            sequences_fasta = select_first([subsample.subsampled_msa, nextclade.nextalign_msa])
     }
     
     call nextstrain.snp_sites {
         input:
-            msa_fasta = select_first([subsample.subsampled_msa, mafft.aligned_sequences])
+            msa_fasta = select_first([subsample.subsampled_msa, nextclade.nextalign_msa])
     }
 
     #### augur_from_msa
 
     call nextstrain.augur_mask_sites {
         input:
-            sequences = select_first([subsample.subsampled_msa, mafft.aligned_sequences])
+            sequences = select_first([subsample.subsampled_msa, nextclade.nextalign_msa])
     }
     call nextstrain.draft_augur_tree {
         input:
@@ -200,14 +196,12 @@ workflow sarscov2_nextstrain {
 
     output {
       File  combined_assemblies   = filter_sequences_by_length.filtered_fasta
-      File  multiple_alignment    = mafft.aligned_sequences
+      File  multiple_alignment    = nextclade.nextalign_msa
       File  unmasked_snps         = snp_sites.snps_vcf
       File  masked_alignment      = augur_mask_sites.masked_sequences
 
       File  metadata_merged       = derived_cols.derived_metadata
       File  keep_list             = fasta_to_ids.ids_txt
-      File  mafft_alignment  = mafft.aligned_sequences
-
 
       File  ml_tree               = draft_augur_tree.aligned_tree
       File  time_tree             = refine_augur_tree.tree_refined

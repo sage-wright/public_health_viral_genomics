@@ -39,7 +39,7 @@ workflow titan_augur_run {
     call phylo.snp_dists {
       input:
         cluster_name = build_name,
-        alignment = sarscov2_nextstrain.mafft_alignment
+        alignment = sarscov2_nextstrain.multiple_alignment
     }
     call versioning.version_capture{
       input:
@@ -49,7 +49,7 @@ workflow titan_augur_run {
       String titan_augur_run_analysis_date      = version_capture.date
       
       File  combined_assemblies   = sarscov2_nextstrain.combined_assemblies
-      File  MAFFT_alignment    = sarscov2_nextstrain.mafft_alignment
+      File  multiple_alignment    = sarscov2_nextstrain.multiple_alignment
       File  unmasked_snps         = sarscov2_nextstrain.unmasked_snps
       File  metadata_merged       = sarscov2_nextstrain.metadata_merged
       File  keep_list             = sarscov2_nextstrain.keep_list
