@@ -241,7 +241,7 @@ task quasitools_one_sample {
     }
     input {
         File   read1
-        File   read2
+        File?   read2
         String samplename
         String docker = "quay.io/biocontainers/quasitools:0.7.0--pyh864c0ab_1"
     }
@@ -252,7 +252,7 @@ task quasitools_one_sample {
         quasitools --version > QUASITOOLS_VERSION && sed -i -e 's/^/quasitools /' QUASITOOLS_VERSION
         # Run hydra
         set -e
-        quasitools hydra "~{read1}" "~{read2}" -o "~{samplename}"
+        quasitools hydra "~{read1}" "~{read2}" -o "~{samplename}" -tr -gc
     }
     runtime {
         docker: "~{docker}"
@@ -265,10 +265,11 @@ task quasitools_one_sample {
     output {
         String quasitools_version = read_string("QUASITOOLS_VERSION")
         String quasitools_date = read_string("DATE")
-        File   aa_xlsx = "~{samplename}/aa.xlsx"
-        File   codons_tsv = "~{samplename}/codons.tsv"
         File   consensus_fasta = "~{samplename}/consensus.fa"
-        File   drms_csv = "~{samplename}/drms.csv"
+        File   coverage_file = "~{samplename}/coverage_file.csv"
+        File   dr_report = "~{samplename}/dr_report.csv"
+        File   hydra_vcf = "~{samplename}/hydra.vcf"
+        File   mutations_report = "~{samplename}/mutation_report.aavf"
     }
 }
 
