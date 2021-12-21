@@ -215,12 +215,12 @@ task hivmmer_one_sample {
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
         # Run hivmmer
         set -e
-        hivmmer "~{read1}" "~{read2}" --min-length "~{min_read_length}" --min-quality "~{min_quality_score}" -o "~{samplename}"
+        hivmmer "~{read1}" "~{read2}" --min-length "~{min_read_length}" --min-quality "~{min_quality_score}"
     }
     runtime {
         docker: "~{docker}"
-        memory: "16 GB"
-        cpu:    8
+        memory: "4 GB"
+        cpu:    4
         disks: "local-disk 50 HDD"
         dx_instance_type: "mem1_ssd1_v2_x2"
         maxRetries:   3
@@ -228,10 +228,10 @@ task hivmmer_one_sample {
     output {
         String hivmmer_version = read_string("HIVMMER_VERSION")
         String hivmmer_date = read_string("DATE")
-        File   aa_xlsx = "~{samplename}/aa.xlsx"
-        File   codons_tsv = "~{samplename}/codons.tsv"
-        File   consensus_fasta = "~{samplename}/consensus.fa"
-        File   drms_csv = "~{samplename}/drms.csv"
+        File   aa_xlsx = "./aa.xlsx"
+        File   codons_tsv = "./codons.tsv"
+        File   consensus_fasta = "./consensus.fa"
+        File   drms_csv = "./drms.csv"
     }
 }
 
