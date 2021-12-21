@@ -75,3 +75,8 @@ workflows:
    primaryDescriptorPath: /workflows/wf_hivmmer.wdl
    testParameterFiles:
     - empty.json
+ - name: QUASITOOLS_HYDRA
+   subclass: WDL
+   primaryDescriptorPath: /workflows/wf_hydra.wdl
+   testParameterFiles:
+    - empty.json

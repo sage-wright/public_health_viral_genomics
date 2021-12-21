@@ -235,6 +235,43 @@ task hivmmer_one_sample {
     }
 }
 
+task quasitools_one_sample {
+    meta {
+        description: "HIV drug resistance detection of one sample."
+    }
+    input {
+        File   read1
+        File   read2
+        String samplename
+        String docker = "quay.io/biocontainers/quasitools:0.7.0--pyh864c0ab_1"
+    }
+    command {
+        # date and version capture
+        date | tee DATE
+        # Print and save version
+        quasitools --version > QUASITOOLS_VERSION && sed -i -e 's/^/quasitools /' QUASITOOLS_VERSION
+        # Run hydra
+        set -e
+        quasitools hydra "~{read1}" "~{read2}" -o "~{samplename}"
+    }
+    runtime {
+        docker: "~{docker}"
+        memory: "4 GB"
+        cpu:    4
+        disks: "local-disk 50 HDD"
+        dx_instance_type: "mem1_ssd1_v2_x2"
+        maxRetries:   3
+    }
+    output {
+        String quasitools_version = read_string("QUASITOOLS_VERSION")
+        String quasitools_date = read_string("DATE")
+        File   aa_xlsx = "~{samplename}/aa.xlsx"
+        File   codons_tsv = "~{samplename}/codons.tsv"
+        File   consensus_fasta = "~{samplename}/consensus.fa"
+        File   drms_csv = "~{samplename}/drms.csv"
+    }
+}
+
 task nextclade_one_sample {
     meta {
         description: "Nextclade classification of one sample. Leaving optional inputs unspecified will use SARS-CoV-2 defaults."
