@@ -215,12 +215,12 @@ task hivmmer_one_sample {
         hivmmer --version > HIVMMER_VERSION && sed -i -e 's/^/hivmmer /' HIVMMER_VERSION
         # Run hivmmer
         set -e
-        hivmmer "~{read1}" "~{read2}" --min-length "~{min_read_length}" --min-quality "~{min_quality_score}"
+        hivmmer "~{read1}" "~{read2}" --min-length "~{min_read_length}" --min-quality "~{min_quality_score}" -o ./
     }
     runtime {
         docker: "~{docker}"
-        memory: "4 GB"
-        cpu:    4
+        memory: "16 GB"
+        cpu:    8
         disks: "local-disk 50 HDD"
         dx_instance_type: "mem1_ssd1_v2_x2"
         maxRetries:   3
