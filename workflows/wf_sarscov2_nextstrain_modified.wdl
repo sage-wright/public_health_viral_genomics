@@ -10,6 +10,7 @@ workflow sarscov2_nextstrain {
         description: "Modified version of the Broad's sars_cov2_nextstrain WDL Worfklow to align assemblies, build trees, and convert to json representation suitable for Nextstrain visualization. See https://nextstrain.org/docs/getting-started/ and https://nextstrain-augur.readthedocs.io/en/stable/"
         author: "Kevin Libuit"
         email:  "kevin.libuit@theiagen.com"
+        allowNestedInputs: true
     }
 
     input {
