@@ -352,7 +352,7 @@ task derived_cols {
         
         # capture all metadata fields 
         
-        head -n1 "~{basename}.derived_cols.tsv" | tr '\t' '\n' | tee METADATA_FIELDS
+        head -n1 "~{basename}.derived_cols.tsv" | tr '\t' '\n' | sed '/^$/d' | tee METADATA_FIELDS
         
     >>>
     runtime {
