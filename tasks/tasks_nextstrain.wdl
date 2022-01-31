@@ -350,6 +350,10 @@ task derived_cols {
         # remove duplicate strains 
         awk '!a[$1]++' "~{basename}.derived_cols.tsv" > temp.tsv && mv temp.tsv "~{basename}.derived_cols.tsv"
         
+        # capture all metadata fields 
+        
+        cat "~{basename}.derived_cols.tsv" | tr '\t' '\n' | tee METADATA_FIELDS
+        
     >>>
     runtime {
         docker: docker
@@ -361,6 +365,7 @@ task derived_cols {
     }
     output {
         File derived_metadata = "~{basename}.derived_cols.tsv"
+        Array[String] color_by_metadata = read_lines("METADATA_FIELDS")
     }
 }
 

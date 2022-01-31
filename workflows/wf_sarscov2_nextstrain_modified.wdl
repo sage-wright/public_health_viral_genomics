@@ -32,7 +32,6 @@ workflow sarscov2_nextstrain {
         Int             mafft_cpu=64
         Int             mafft_mem_size=500
         Int             min_unambig_genome = 27000
-        Array[String]? color_by_metadata
     }
 
     parameter_meta {
@@ -188,7 +187,7 @@ workflow sarscov2_nextstrain {
             tree            = refine_augur_tree.tree_refined,
             sample_metadata = derived_cols.derived_metadata,
             lat_longs_tsv   = select_first([lat_longs_tsv, nextstrain_ncov_defaults.lat_longs_tsv]),
-            color_by_metadata = color_by_metadata,
+            color_by_metadata = derived_cols.color_by_metadata,
             node_data_jsons = select_all([
                                 refine_augur_tree.branch_lengths,
                                 ancestral_traits.node_data_json,
