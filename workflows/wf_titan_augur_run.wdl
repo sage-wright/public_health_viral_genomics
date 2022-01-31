@@ -53,6 +53,7 @@ workflow titan_augur_run {
       File  unmasked_snps         = sarscov2_nextstrain.unmasked_snps
       File  metadata_merged       = sarscov2_nextstrain.metadata_merged
       File  keep_list             = sarscov2_nextstrain.keep_list
+      File  distance_tree         = sarscov2_nextstrain.ml_tree
       File  time_tree             = sarscov2_nextstrain.time_tree
       File  auspice_input_json    = sarscov2_nextstrain.auspice_input_json
 
